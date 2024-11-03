@@ -1,0 +1,15 @@
+{
+  "version": "1.0.0",
+  "name": "requester",
+  "module": "index.ts",
+  "type": "module",
+  "scripts": {
+    "release": "docker build --platform linux/amd64 -t domenoo/requester:latest -f Dockerfile . && docker save -o requester-latest.tar domenoo/requester:latest"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
