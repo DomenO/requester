@@ -1,6 +1,7 @@
 import { serve } from "bun";
 
 serve({
+  idleTimeout: 0,
   fetch(req) {
     const url = new URL(req.url);
     const params = url.searchParams;
