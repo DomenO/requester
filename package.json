@@ -3,9 +3,7 @@
   "name": "requester",
   "module": "index.ts",
   "type": "module",
-  "scripts": {
-    "release": "docker build --platform linux/amd64 -t domenoo/requester:latest -f Dockerfile . && docker save -o requester-latest.tar domenoo/requester:latest"
-  },
+  "license": "MIT",
   "devDependencies": {
     "@types/bun": "latest"
   },
