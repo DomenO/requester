@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Requester - HTTP Response Simulator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 3rem;
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .open-source-note {
+            font-size: 1rem !important;
+            opacity: 0.8 !important;
+            margin-top: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .header-buttons {
+            margin-top: 1.5rem;
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .github-link,
+        .feedback-link {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .github-link:hover,
+        .feedback-link:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .feedback-link {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 2rem;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        @media (max-width: 900px) {
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .feature {
+            text-align: center;
+            padding: 1.5rem;
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .feature h3 {
+            margin-bottom: 1rem;
+            color: #667eea;
+        }
+        
+        .examples {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .examples h3 {
+            margin-bottom: 1rem;
+            color: #333;
+        }
+        
+        .example {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 0 0 1rem 0;
+            white-space: pre;
+            position: relative;
+        }
+        
+        .example code {
+            background: none;
+            padding: 0;
+            color: inherit;
+            font-family: inherit;
+            font-size: inherit;
+        }
+        
+        .copy-button {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #e2e8f0;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: all 0.2s ease;
+            opacity: 0.7;
+        }
+        
+        .copy-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            opacity: 1;
+        }
+        
+        .copy-button.copied {
+            background: rgba(34, 197, 94, 0.3);
+            border-color: rgba(34, 197, 94, 0.5);
+        }
+        
+        .params {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .param {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .param:last-child {
+            border-bottom: none;
+        }
+        
+        .param-name {
+            font-weight: 600;
+            color: #667eea;
+            width: 64px;
+        }
+        
+        .param-desc {
+            color: #6c757d;
+            flex: 1;
+            margin-left: 1rem;
+        }
+        
+        .footer {
+            text-align: center;
+            color: white;
+            opacity: 0.8;
+            margin-top: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🚀 Requester</h1>
+            <p>HTTP Response Simulator for Testing and Development</p>
+            <p class="open-source-note">Open Source • Free to Use • Community Driven</p>
+            <div class="header-buttons">
+                <a href="https://github.com/DomenO/requester" target="_blank" class="github-link">
+                    ⭐ Star on GitHub
+                </a>
+                <a href="https://github.com/DomenO/requester/issues/new" target="_blank" class="feedback-link">
+                    💬 Send Feedback
+                </a>
+            </div>
+        </header>
+        
+        <div class="card">
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon">⏱️</div>
+                    <h3>Configurable Delay</h3>
+                    <p>Simulate slow network connections with the pending parameter</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">📊</div>
+                    <h3>Any HTTP Status</h3>
+                    <p>Test error handling with any HTTP status codes</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Custom Headers</h3>
+                    <p>Add arbitrary headers for full control</p>
+                </div>
+            </div>
+            
+            <div class="params">
+                <h3>📋 Query Parameters</h3>
+                <div class="param">
+                    <span class="param-name">pending</span>
+                    <span class="param-desc">Response delay in milliseconds (default: 0)</span>
+                </div>
+                <div class="param">
+                    <span class="param-name">status</span>
+                    <span class="param-desc">HTTP status code for response (default: 200)</span>
+                </div>
+                <div class="param">
+                    <span class="param-name">body</span>
+                    <span class="param-desc">Response body content (default: empty)</span>
+                </div>
+                <div class="param">
+                    <span class="param-name">_header</span>
+                    <span class="param-desc">Headers (underscore prefix is automatically removed)</span>
+                </div>
+            </div>
+            
+            <div class="examples">
+                <h3>💡 Usage Examples</h3>
+                
+                <pre class="example"><code># Response with 2 second delay
+curl "https://req.fadme.dev?pending=2000&body=Hello%20World"</code><button class="copy-button">Copy</button></pre>
+                
+                <pre class="example"><code># 404 error response with headers shown
+curl "https://req.fadme.dev?status=404&body=Not%20Found"</code><button class="copy-button">Copy</button></pre>
+                
+                <pre class="example"><code># Response with custom headers
+curl -i "https://req.fadme.dev?_x-custom=custom&_content-type=application/json&body=\{\"message\":\"success\"\}"</code><button class="copy-button">Copy</button></pre>
+                
+                <pre class="example"><code># Slow API simulation with JSON
+curl -i "https://req.fadme.dev?pending=3000&status=200&_content-type=application/json&body=\{\"data\":\[1,2,3\]\}"</code><button class="copy-button">Copy</button></pre>
+            </div>
+        </div>
+        
+        <footer class="footer">
+            <p>Made with ❤️ by <a href="https://fadme.dev" target="_blank" style="color: white; text-decoration: underline;">fadme.dev</a></p>
+        </footer>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const copyButtons = document.querySelectorAll('.copy-button');
+            
+            copyButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const codeElement = this.parentElement.querySelector('code');
+                    const fullText = codeElement.textContent;
+                    
+                    const lines = fullText.split('\n');
+                    const commandLines = lines
+                        .map(line => line.trim())
+                        .filter(line => line && !line.startsWith('#'));
+                    
+                    const textToCopy = commandLines.join(' ');
+                    
+                    navigator.clipboard.writeText(textToCopy).then(() => {
+                        const originalText = this.textContent;
+                        this.textContent = 'Copied!';
+                        this.classList.add('copied');
+                        
+                        setTimeout(() => {
+                            this.textContent = originalText;
+                            this.classList.remove('copied');
+                        }, 2000);
+                    }).catch(err => {
+                        console.error('Failed to copy: ', err);
+                        this.textContent = 'Failed';
+                        setTimeout(() => {
+                            this.textContent = 'Copy';
+                        }, 2000);
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
