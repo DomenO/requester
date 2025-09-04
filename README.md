@@ -4,7 +4,7 @@ HTTP Response Simulator for testing and development. A simple tool for simulatin
 
 ## 🌐 Demo
 
-Try it now: **[https://req.fadme.dev](req.fadme.dev)**
+Try it now: **[req.fadme.dev](https://req.fadme.dev)**
 
 ## ✨ Features
 
