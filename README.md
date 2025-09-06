@@ -1,4 +1,4 @@
-# 🚀 Requester
+# Requester
 
 HTTP Response Simulator for testing and development. A simple tool for simulating various HTTP responses with configurable parameters.
 

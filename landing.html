@@ -140,9 +140,13 @@
             font-family: 'Monaco', 'Menlo', monospace;
             font-size: 0.9rem;
             overflow-x: auto;
-            margin: 0 0 1rem 0;
+            margin: 0;
             white-space: pre;
+        }
+        
+        .example-container {
             position: relative;
+            margin-bottom: 1rem;
         }
         
         .example code {
@@ -166,6 +170,7 @@
             font-size: 0.75rem;
             transition: all 0.2s ease;
             opacity: 0.7;
+            z-index: 10;
         }
         
         .copy-button:hover {
@@ -234,12 +239,15 @@
 <body>
     <div class="container">
         <header class="header">
-            <h1>🚀 Requester</h1>
+            <h1>Requester</h1>
             <p>HTTP Response Simulator for Testing and Development</p>
             <p class="open-source-note">Open Source • Free to Use • Community Driven</p>
             <div class="header-buttons">
                 <a href="https://github.com/DomenO/requester" target="_blank" class="github-link">
                     ⭐ Star on GitHub
+                </a>
+                <a href="https://github.com/DomenO/requester#readme" target="_blank" class="feedback-link">
+                    🏠 Self-Hosted
                 </a>
                 <a href="https://github.com/DomenO/requester/issues/new" target="_blank" class="feedback-link">
                     💬 Send Feedback
@@ -289,17 +297,29 @@
             <div class="examples">
                 <h3>💡 Usage Examples</h3>
                 
-                <pre class="example"><code># Response with 2 second delay
-curl "https://req.fadme.dev?pending=2000&body=Hello%20World"</code><button class="copy-button">Copy</button></pre>
+                <div class="example-container">
+                    <button class="copy-button">Copy</button>
+                    <pre class="example"><code># Response with 2 second delay
+curl "https://req.fadme.dev?pending=2000&body=Hello%20World"</code></pre>
+                </div>
                 
-                <pre class="example"><code># 404 error response with headers shown
-curl "https://req.fadme.dev?status=404&body=Not%20Found"</code><button class="copy-button">Copy</button></pre>
+                <div class="example-container">
+                    <button class="copy-button">Copy</button>
+                    <pre class="example"><code># 404 error response with headers shown
+curl "https://req.fadme.dev?status=404&body=Not%20Found"</code></pre>
+                </div>
                 
-                <pre class="example"><code># Response with custom headers
-curl -i "https://req.fadme.dev?_x-custom=custom&_content-type=application/json&body=\{\"message\":\"success\"\}"</code><button class="copy-button">Copy</button></pre>
+                <div class="example-container">
+                    <button class="copy-button">Copy</button>
+                    <pre class="example"><code># Response with custom headers
+curl -i "https://req.fadme.dev?_x-custom=custom&_content-type=application/json&body=\{\"message\":\"success\"\}"</code></pre>
+                </div>
                 
-                <pre class="example"><code># Slow API simulation with JSON
-curl -i "https://req.fadme.dev?pending=3000&status=200&_content-type=application/json&body=\{\"data\":\[1,2,3\]\}"</code><button class="copy-button">Copy</button></pre>
+                <div class="example-container">
+                    <button class="copy-button">Copy</button>
+                    <pre class="example"><code># Slow API simulation with JSON
+curl -i "https://req.fadme.dev?pending=3000&status=200&_content-type=application/json&body=\{\"data\":\[1,2,3\]\}"</code></pre>
+                </div>
             </div>
         </div>
         
@@ -314,7 +334,7 @@ curl -i "https://req.fadme.dev?pending=3000&status=200&_content-type=application
             
             copyButtons.forEach(button => {
                 button.addEventListener('click', function() {
-                    const codeElement = this.parentElement.querySelector('code');
+                    const codeElement = this.parentElement.querySelector('.example code');
                     const fullText = codeElement.textContent;
                     
                     const lines = fullText.split('\n');
